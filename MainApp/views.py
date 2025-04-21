@@ -4,6 +4,7 @@ from MainApp.forms import SnippetForm
 from MainApp.models import Snippet
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
 
@@ -12,6 +13,7 @@ def index_page(request):
     return render(request, 'pages/index.html', context)
 
 
+@login_required(login_url='home')#говорим что сниппеты может добавлять только авторизованный пользователь
 def add_snippet_page(request):
     #создаем пустую форму при запросе методом GET
     if request.method == "GET":
