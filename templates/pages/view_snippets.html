@@ -30,6 +30,7 @@
                         <th scope="col">Дата создания</th>
                         <th scope="col">Редактировать</th>
                         <th scope="col">Удалить</th>
+                        <th scope="col">Пользователь</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -52,6 +53,7 @@
                                 <form action="{% url "snippet-delete" snippet.id %}" method="post">
                                     {% csrf_token %}
                                 <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
                             </td> {% endcomment %}
 
                             <td>
@@ -59,6 +61,9 @@
                                     <i style="color: red;" class="fa-solid fa-trash fa-beat"></i>
                                 </a>
                             </td>
+
+                            <td>{{ snippet.user.username }}</td>
+
                         </tr>
                     {% endfor %}
                     </tbody>
