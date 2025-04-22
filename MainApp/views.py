@@ -1,11 +1,10 @@
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from MainApp.forms import SnippetForm
+from MainApp.forms import SnippetForm, UserRegistrationForm
 from MainApp.models import Snippet
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
 
 
 def index_page(request):
@@ -105,6 +104,23 @@ def snippet_delete(request, snippet_id: int):
         snippet.delete()
     return redirect("snippets-list")
 
+
+def create_user(request):
+    context = {'pagename': 'Регистрация нового пользователя'}
+    #создаем пустую форму при запросе методом GET
+    if request.method == "GET":
+        form = UserRegistrationForm()
+        context['form'] = form
+        return render(request, 'pages/registration.html', context)
+    #получаем данные из формы и на их основе создаем новый сниппет в БД
+    if request.method == "POST":
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+        context['form'] = form
+        return render(request, "pages/registration.html", context)
+    
 
 def login(request):
     if request.method == 'POST':
