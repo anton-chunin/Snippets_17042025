@@ -28,9 +28,9 @@
                         <th scope="col">ID</th>
                         <th scope="col">Название</th>
                         <th scope="col">Дата создания</th>
-                        <th scope="col">Редактировать</th>
                         <th scope="col">Удалить</th>
                         <th scope="col">Пользователь</th>
+                        <th scope="col">Тип сниппета</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -38,32 +38,36 @@
                         <tr>
                             <td scope="row">{{ snippet.id }}</td>
                             <td><a href="{% url "snippet-detail" snippet.id %}">{{ snippet.name }}</a>
-                            </td>
-
-                            {# https://docs.djangoproject.com/en/5.0/ref/templates/builtins/#std-templatefilter-date #}
-                            <td>{{ snippet.creation_date | date:"Y-m-d H:i:s"}}</td>
-
-                            <td>
+                                {% if request.user == snippet.user %}
                                 <a href="{% url "snippet-edit" snippet.id %}">
                                     <i class="fa-solid fa-pen-to-square fa-bounce" style="color: #63E6BE;"></i>
                                 </a>
+                                <a href="{% url "snippet-delete" snippet.id %}">
+                                    <i style="color: red;" class="fa-solid fa-trash fa-beat"></i>
+                                </a>
+                                {% endif %}
                             </td>
+
+
+                            {# https://docs.djangoproject.com/en/5.0/ref/templates/builtins/#std-templatefilter-date #}
+                            <td>{{ snippet.creation_date | date:"Y-m-d H:i:s"}}</td>
                             
-                            {% comment %} <td>
+                            <td>
                                 <form action="{% url "snippet-delete" snippet.id %}" method="post">
                                     {% csrf_token %}
                                 <button type="submit" class="btn btn-danger">Delete</button>
                                 </form>
-                            </td> {% endcomment %}
-
-                            <td>
-                                <a href="{% url "snippet-delete" snippet.id %}">
-                                    <i style="color: red;" class="fa-solid fa-trash fa-beat"></i>
-                                </a>
                             </td>
 
                             <td>{{ snippet.user.username }}</td>
 
+                            <td>
+                                {% if snippet.public %}
+                                    Публичный
+                                {% else %}
+                                    Приватный
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
